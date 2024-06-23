@@ -1,24 +1,32 @@
 import pdfplumber  # Biblioteca para ler e extrair texto de PDFs
-from reportlab.lib.pagesizes import letter  # Biblioteca para definir o tamanho das páginas do PDF a ser gerado
-from reportlab.pdfgen import canvas  # Biblioteca para gerar PDFs
+import csv
 
 #Função para ler respostas de um PDF
 def ler_respostas_pdf(pdf_path):
-    respostas_alunos = [] # É uma lista para armazenar as respostas dos alunos
-    with pdfplumber.open(pdf_path) as pdf: # Abre o PDF especificado pelo caminho
-        for page in pdf.pages : # loop para cada página do pdf
-            text = page.extract_text() # Extrai o texto da página
+    respostas_alunos = [] # Lista para armazenar as respotas de cada aluno
+    with pdfplumber.open(pdf_path) as pdf: # Abre o PDF usando o pdfplumber
+        for page in pdf.pages: # Itera sobre cada página PDF
+            text = page.extract_text() # Extrai o texto da página atual do pdf
             lines = text.split('\n') # Divide o texto em linhas
-            nome = lines[0] # Suposição de que a primeira linha tenha o nome do Aluno
-            respostas = lines[4:] # Supondo que as respostas estejam nas linhas seguinte
-            respostas_alunos.append({'Nome': nome, 'Respostas': respostas}) # Adiciona as respostas do aluno à lista
-    return respostas_alunos # Retorna a lista com as respostas preenchidas
+            nome = lines[0] # A primeira linha se considera o nome do aluno
+            respostas = [] 
+            for line in lines[4:]: # Itera sobre as linhas a partir da quinta linha (índice 4)
+                resposta = limpar_resposta(line.split()[0])  # Extrai a primeira palavra da linha como resposta o .split separa todas as palavras da linha em uma lista.
+                respostas.append(resposta) # Adiciona a resposta à lista de respostas do aluno
+            respostas_alunos.append({'Nome': nome, 'Respostas': respostas})  # Adiciona as respostas do aluno à lista geral
+    return respostas_alunos
+
+
+# Função para limpar caracteres indevidos da respota
+def limpar_resposta(resposta):
+    return resposta.replace("_", "").strip()  # Remove underlines e espaços em branco
 
 #Função para corrigir a prova
 def corrigir_prova(respostas, gabarito):
     resultados = [] # Lista para armazenar os resultados da correção de cada questão
     for resposta, correta in zip(respostas, gabarito): # Itera sobre cada resposta e a corresponde no gabarito.
-        correta = correta.strip() # Remove espaços em branco desnecessários da respota correta.
+        resposta = limpar_resposta(resposta) # Limpa a respota antes de compará-la  
+        correta = limpar_resposta(correta) # Limpa a respota correta 
         resultado = {
             'Resposta': resposta.strip(), # Respota do aluno (removendo espaços em branco)
             'Correta': correta, # Respota Correta
