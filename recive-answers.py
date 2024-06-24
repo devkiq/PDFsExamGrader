@@ -36,7 +36,7 @@ def corrigir_prova(respostas, gabarito):
     return resultados
 
 # Caminho para o gabarito e o diretório de PDFs de respostas
-gabarito = ['LM', 'LM', 'S', 'S', 'LM', 'S', 'LM', 'LM', 'S', 'LM', 'S', 'S', 'LM', 'S', 'LM', 'S', 'S', 'S', 'LM', 'LM', 'LM']
+gabarito = ['A','B','C','D','E']
 pdf_directory = 'pdfs'
 output_directory = 'resultados'
 
