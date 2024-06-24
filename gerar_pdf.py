@@ -1,8 +1,3 @@
-from reportlab.lib.pagesizes  import letter
-from reportlab.pdfgen import canvas
-
-# gerar_pdf.py
-
 from reportlab.lib.pagesizes import letter
 from reportlab.pdfgen import canvas
 

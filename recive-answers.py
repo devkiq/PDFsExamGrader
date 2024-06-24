@@ -1,3 +1,4 @@
+import os
 import pdfplumber
 from gerar_pdf import gerar_pdf_resultados
 
@@ -34,17 +35,25 @@ def corrigir_prova(respostas, gabarito):
         resultados.append(resultado)
     return resultados
 
-# Caminho para o gabarito e o PDF de respostas
+# Caminho para o gabarito e o diretório de PDFs de respostas
 gabarito = ['LM', 'LM', 'S', 'S', 'LM', 'S', 'LM', 'LM', 'S', 'LM', 'S', 'S', 'LM', 'S', 'LM', 'S', 'S', 'S', 'LM', 'LM', 'LM']
-pdf_path = 'C:/PROJETOS PROGRAMAÇÃO/Projeto Correção de Provas/test-answers.pdf'
+pdf_directory = 'pdfs'
+output_directory = 'resultados'
 
-# Lê as respostas do PDF e corrige as provas
-respostas_alunos = ler_respostas_pdf(pdf_path)
-for aluno in respostas_alunos:
-    aluno['Correção'] = corrigir_prova(aluno['Respostas'], gabarito)
+# Verifica se o diretório de saída existe, caso contrário, cria-o
+if not os.path.exists(output_directory):
+    os.makedirs(output_directory)
 
-# Define o caminho onde o PDF de resultados será salvo
-output_path = 'C:/PROJETOS PROGRAMAÇÃO/Projeto Correção de Provas/resultados_correcao.pdf'
-
-# Gera o PDF com os resultados da correção
-gerar_pdf_resultados(respostas_alunos, output_path)
+# Itera sobre todos os arquivos PDF no diretório especificado
+for pdf_file in os.listdir(pdf_directory):
+    if pdf_file.endswith('.pdf'):
+        pdf_path = os.path.join(pdf_directory, pdf_file)
+        respostas_alunos = ler_respostas_pdf(pdf_path)
+        for aluno in respostas_alunos:
+            aluno['Correção'] = corrigir_prova(aluno['Respostas'], gabarito)
+        
+        # Define o caminho onde o PDF de resultados será salvo
+        output_path = os.path.join(output_directory, f'resultado_{os.path.splitext(pdf_file)[0]}.pdf')
+        
+        # Gera o PDF com os resultados da correção
+        gerar_pdf_resultados(respostas_alunos, output_path)
