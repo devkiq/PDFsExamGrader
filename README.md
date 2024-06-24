@@ -1,6 +1,6 @@
 PDFExamGrader
 
-PDFExamGrader is an automated tool designed to grade exams from PDF files.
+PDFExamGrader is an automated tool designed to grade exams from PDF files, I have tested this script with various answer keys. If you need any modifications, please feel free to contact me.
 
 Features:
 - Reads answers from PDF exam files
